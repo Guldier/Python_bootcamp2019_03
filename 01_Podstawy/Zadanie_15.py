@@ -37,7 +37,7 @@ while True:
         liczba_ruchow = 0
         print("Skarb zmienił położenie")
 
-    print(f"Pozycja: {x_gracza},{y_gracza}")
+
     odleg_po = abs(x_skarbu - x_gracza) + abs(y_skarbu - y_gracza)
 
     if x_gracza < 0 or x_gracza > 10 or y_gracza < 0 or y_gracza > 10:
@@ -48,9 +48,9 @@ while True:
         print(f"Znalazłeś skarb. Liczba ruchów: {liczba_ruchow_cala}")
         break
 
-    if odleg_przed < odleg_po:
-        print("zimno")
-    else:
-        print("cieplo")
-
-
+    if randint(1,5) != 5:
+        print(f"Pozycja: {x_gracza},{y_gracza}")
+        if odleg_przed < odleg_po:
+            print("zimno")
+        else:
+            print("cieplo")
