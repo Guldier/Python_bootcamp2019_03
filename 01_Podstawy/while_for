@@ -1,0 +1,42 @@
+# i=0
+# while i<100:
+#     print(i**2)
+#     i+=1
+#
+# i=0
+# while True:
+#     i+=1
+#     if i%9 == 0:
+#         break
+#     if i%5 ==0:
+#         continue5t
+#     print(i)
+#
+# print("Koniec")
+
+# i=0
+# while i<100:
+#     if i%2==0:
+#         i+=1
+#         continue
+#     else:
+#         print(i, i ** 2)
+#     i+=1
+
+i = 1
+srednia = 0
+temperatura = 0
+komenda = ""
+while True:
+    komenda = input(f"Podaj temperature_{i}: ")
+    if komenda == "k":
+        break
+    else:
+        try:
+            temperatura += int(komenda)
+            i += 1
+        except:
+            print("Nieprawodlowa temperatura")
+
+srednia = temperatura / (i - 1)
+print("Średnia z tygodnia: ", srednia, "\u00b0C")
