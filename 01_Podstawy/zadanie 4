@@ -1,0 +1,8 @@
+cena_za_kilo = float(input("Podaj cene za kilo: "))
+ilosc_towaru = float(input("Podaj ilosc towaru: "))
+
+do_zaplaty = cena_za_kilo*ilosc_towaru
+
+print("Cena za kilo: ",cena_za_kilo)
+print("Waga: ",ilosc_towaru)
+print(f"Do zapłaty: {do_zaplaty}. n\ Waga: {ilosc_towaru}. n\ Cena za kilo: {cena_za_kilo}")
