@@ -1,4 +1,4 @@
-tekst = '<<ala ma <kota> a kot> ma ale'
+tekst = input('<<ala ma <kota> a kot> ma ale')
 def zliczanie_w_nawiasach(tekst, nawias_otwierajacy='<', nawias_zamykajacy='>'):
 
     while tekst.count(nawias_otwierajacy) != tekst.count(nawias_zamykajacy):
