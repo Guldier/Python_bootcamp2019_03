@@ -15,8 +15,15 @@ class Board:
 
     def show_board(self):
         for i in range(self.max_y):
-            print(" . " * self.max_x)
-
+            row=""
+            for j in range(self.max_x):
+                if player1.pos_y == i and player1.pos_x == j:
+                     row += " o "
+                if player2.pos_y == i and player2.pos_x == j:
+                    row += " x "
+                else:
+                    row +=" . "
+            print(row)
     def put_players(self, p1, p2):
         player1_x, player1_y = p1[0], p1[1]
         player2_x, player2_y = p2[0], p2[1]
@@ -76,9 +83,18 @@ def show_board(x, y):
     for i in range(y):
         print(" . " * x)
 
-# main_board = Board()
-# main_board.show_board()
-#
+
+player1 = Player("Waldek", 5, 5)
+# player1.introduce()
+
+player2 = Player("Pacek", 0, 0)
+# player2.introduce()
+
+main_board = Board()
+main_board.put_players([player1.pos_x, player1.pos_y], [player2.pos_x, player2.pos_y])
+main_board.show_board()
+
+
 # bow = Item("Bow", 2, 0, 3)
 # sword = Item("Sword", 3, 2, 1)
 #
@@ -96,13 +112,13 @@ def show_board(x, y):
 def test_player_init():
     player1 = Player("Waldek", 5, 5)
     assert player1.name == "Waldek"
-    #assert player1.equipment == "Sword"
+    # assert player1.equipment == "Sword"
     assert player1.pos_x == 5
     assert player1.pos_y == 5
 
 
 def test_player_introduce(capsys):
-    player1 = Player("Waldek",  5, 5)
+    player1 = Player("Waldek", 5, 5)
     player1.introduce()
     captured = capsys.readouterr()
     assert captured.out == 'Twoja postac to Waldek\nHealth: 100\nDefance: 10\nStrenth: 5\n\n'
