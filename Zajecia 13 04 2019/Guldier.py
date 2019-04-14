@@ -1,61 +1,78 @@
-import sys
+import random
+import math
 
 
 class Board:
-    player1_x = None
-    player2_x = None
-    player1_y = None
-    player2_y = None
 
     def __init__(self):
-        self.max_x = 10
-        self.max_y = 10
-        self.min_x = 0
-        self.min_y = 0
+        self._max_x = 10
+        self._max_y = 10
+        self._min_x = 0
+        self._min_y = 0
 
-    def show_board(self):
-        for i in range(self.max_y):
-            row=""
-            for j in range(self.max_x):
-                if player1.pos_y == i and player1.pos_x == j:
-                     row += " o "
-                if player2.pos_y == i and player2.pos_x == j:
-                    row += " x "
+    def show_board(self, player1, player2, item1, item2):
+        for i in range(self._max_y):
+            row = ""
+            for j in range(self._max_x):
+                if player1._pos_y == i and player1._pos_x == j:
+                    row += player1._emblemat
+                elif player2._pos_y == i and player2._pos_x == j:
+                    row += player2._emblemat
+                elif item1[1] == i and item1[0] == j:
+                    row += " * "
+                elif item2[1] == i and item2[0] == j:
+                    row += " * "
                 else:
-                    row +=" . "
+                    row += " . "
             print(row)
-    def put_players(self, p1, p2):
-        player1_x, player1_y = p1[0], p1[1]
-        player2_x, player2_y = p2[0], p2[1]
+        print(player1._name, player1._emblemat, " | Life:", player1._health, " | A:", player1._strength, " | D:",
+              player1._defence,
+              " | R:", player1.attack_range, " | ", "Move: ")
+        # print(defensor, " | ", defe_life, " | ", "Move: ")
+
+    def odleglosc_miedzy_playerami(self, pos1_x, pos1_y, pos2_x, pos2_y):
+        dist_x = math.fabs(pos1_x - pos2_x)
+        dist_y = math.fabs(pos1_y - pos2_y)
+        dist = math.sqrt(dist_x ** 2 + dist_y ** 2)
+        return dist
 
 
 class Item:
-    def __init__(self, name, plus_attack, plus_defence, range):
-        self.name = name
-        self.plus_attack = plus_attack
-        self.plus_defence = plus_defence
-        self.range = range
+    def __init__(self, name):
+        self._name = name
+        self._plus_attack = random.randint(1, 10)
+        self._plus_defence = random.randint(1, 10)
+        self._range = random.randint(1, 10)
+        self._location_x = random.randint(1, 9)
+        self._location_y = random.randint(1, 9)
 
 
 class Player:
-    def __init__(self, name, x, y):
-        self.name = name
-        self.health = 100
-        self.defence = 10
-        self.strengh = 5
-        self.pos_x = x
-        self.pos_y = y
-        self.equipment = []
+    def __init__(self, name, emblemat):
+        self._name = name
+        self._health = 20
+        self._defence = random.randint(1, 10)
+        self._strength = random.randint(1, 10)
+        self._pos_x = random.randint(1, 9)
+        self._pos_y = random.randint(1, 9)
+        self._equipment = []
+        self.period_additional_def = 0
+        self.attack_range = random.randint(1, 9)
+        self._emblemat = emblemat
 
     def move(self, wsad):
         if wsad == 'w':
-            self.pos_y += 1
+            if self._pos_y != 1:
+                self._pos_y -= 1
         elif wsad == 's':
-            self.pos_y -= 1
+            if self._pos_y != 11:
+                self._pos_y += 1
         elif wsad == 'a':
-            self.pos_x -= 1
+            if self._pos_x != 1:
+                self._pos_x -= 1
         elif wsad == 'd':
-            self.pos_x += 1
+            if self._pos_x != 11:
+                self._pos_x += 1
         else:
             pass
 
@@ -65,38 +82,80 @@ class Player:
               f'Defance: {self.defence}\n'
               f'Strenth: {self.strengh}\n')
 
-    @property
-    def atakuj(self):
-        atak = self.strengh
-        for przedmiot in self.equipment:
-            atak += przedmiot.plus_attack
+    def attack(self, distanse):
+        if self.attack_range >= distanse:
+            if len(self._equipment) > 1:
+                for items in self._equipment:
+                    power = self._strength + items._plus_attack
+            else:
+                power = self._strength
+            return power
+        else:
+            return 0
 
-    @property
-    def obrona(self):
-        return self.defence
+    def defence(self, attack):
+        additional_def = 0
+        for items in self._equipment:
+            additional_def = items._plus_defence
+        if self.period_additional_def == 1:
+            full_defence = self._defence + 1 + additional_def
+        else:
+            full_defence = self._defence + additional_def
+        if attack - full_defence > 0:
+            self._health -= attack - full_defence
 
-    def add_equipment(self, item):
-        self.equipment.append(item)
+    def add_eq(self, item):
+        self._equipment.append(item)
+
+    def check_life(self):
+        if self._health <= 0:
+            return False
 
 
-def show_board(x, y):
-    for i in range(y):
-        print(" . " * x)
+class Round:
+    def __init__(self, turn):
+        self._turn = 1
+        self.end_game = False
+
+    def next_round(self):
+        self._turn += 1
+
+    def walka(self, postac1, postac2):
+        main_board.show_board(postac1, postac2,
+                              [sword._location_x, sword._location_y], [bow._location_x, bow._location_y])
+        postac1.move(input())
+        postac2.defence(postac1.attack(
+            main_board.odleglosc_miedzy_playerami(postac1._pos_x, postac1._pos_y, postac2._pos_x, postac2._pos_y)))
+        if postac2.check_life() is False:
+            self.end_game = True
 
 
-player1 = Player("Waldek", 5, 5)
+player1 = Player("Waldek", " o ")
 # player1.introduce()
-
-player2 = Player("Pacek", 0, 0)
+player2 = Player("Pacek", " x ")
 # player2.introduce()
+bow = Item("Bow")
+sword = Item("Sword")
 
 main_board = Board()
-main_board.put_players([player1.pos_x, player1.pos_y], [player2.pos_x, player2.pos_y])
-main_board.show_board()
+runda = Round(1)
+# main_board.put_players([player1.pos_x, player1.pos_y], [player2.pos_x, player2.pos_y])
+while True:
+    runda.walka(player1, player2)
+    if runda.end_game is True:
+        break
+    runda.walka(player2, player1)
+    if runda.end_game is True:
+        break
+
+for i in range(10):
+    print()
+print("END")
 
 
-# bow = Item("Bow", 2, 0, 3)
-# sword = Item("Sword", 3, 2, 1)
+# print(main_board.odleglosc_miedzy_playerami(player1._pos_x, player1._pos_y, player2._pos_x, player2._pos_y))
+
+
 #
 # player1 = Player("Waldek", 5, 5)
 # player1.introduce()
